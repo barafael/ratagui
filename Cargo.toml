@@ -1,0 +1,27 @@
+[package]
+name = "ratagui"
+version = "0.1.0"
+edition = "2024"
+description = "Run egui user interfaces inside ratatui terminal apps via terminal graphics protocols"
+license = "MIT OR Apache-2.0"
+keywords = ["egui", "ratatui", "tui", "terminal", "gui"]
+categories = ["command-line-interface", "gui"]
+
+[features]
+default = []
+# Rasterise egui on multiple threads.
+rayon = ["egui_software_backend/rayon"]
+
+[dependencies]
+# Already pulled in by ratatui-image; used for OSC 52 clipboard writes.
+base64 = "0.22"
+# egui_software_backend 0.0.3 requires egui 0.34.x.
+egui = { version = "0.34", features = ["default_fonts"] }
+egui_software_backend = { version = "0.0.3", default-features = false, features = ["std"] }
+image = { version = "0.25", default-features = false, features = ["png"] }
+ratatui = "0.30"
+ratatui-image = { version = "11.1", default-features = false, features = ["crossterm", "image-defaults"] }
+
+# egui's software renderer is very slow without optimisations.
+[profile.dev.package."*"]
+opt-level = 3
